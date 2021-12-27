@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="db5100b8-4bb4-47c8-ad43-8421fc712e6c" name="Changes" comment="">
+<<<<<<< HEAD
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/user_bongo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/seller_app/pages/product/edit/_slug/_id/index.vue" beforeDir="false" afterPath="$PROJECT_DIR$/seller_app/pages/product/edit/_slug/_id/index.vue" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_bongo" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/user_bongo/nuxt.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/user_bongo/nuxt.config.js" afterDir="false" />
+>>>>>>> ef10c64 (asdf)
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/user_bongo" />
+  </component>
+  <component name="ProjectId" id="22h5zAdzCzzMQQnuh1JfY4Qp3Ev" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/user_bongo/plugins" />
+    <property name="nodejs_package_manager_path" value="yarn" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2021.2.3\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+    <property name="vuejs.nuxt.types-notification-shown" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\bongoBitan\frontend\user_bongo\plugins" />
+      <recent name="E:\bongoBitan\frontend\frontend" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\bongoBitan\frontend\user_bongo\pages\product" />
+      <recent name="E:\bongoBitan\frontend\user_bongo\static\logo" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="db5100b8-4bb4-47c8-ad43-8421fc712e6c" name="Changes" comment="" />
+      <created>1640277244878</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1640277244878</updated>
+      <workItem from="1640277249178" duration="1530000" />
+      <workItem from="1640283769853" duration="5509000" />
+      <workItem from="1640328203872" duration="1234000" />
+      <workItem from="1640332384817" duration="17832000" />
+      <workItem from="1640377306716" duration="1551000" />
+      <workItem from="1640410042236" duration="5271000" />
+      <workItem from="1640511045385" duration="3447000" />
+      <workItem from="1640544862816" duration="4100000" />
+      <workItem from="1640549019306" duration="3551000" />
+<<<<<<< HEAD
+      <workItem from="1640584000714" duration="23268000" />
+=======
+      <workItem from="1640584000714" duration="25339000" />
+>>>>>>> ef10c64 (asdf)
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/frontend" />
+      <path value="$PROJECT_DIR$/bongo_front/user_bongo" />
+    </ignored-roots>
+  </component>
+</project>

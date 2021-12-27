@@ -1,0 +1,26 @@
+// Ref: https://github.com/nuxt-community/vuetify-module#customvariables
+//
+// The variables you want to modify
+// $font-size-root: 14px;
+//$color-pack: false;
+//$body-font-family: 'Roboto', serif;
+
+p{
+  margin: 0 !important;
+}
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background: white;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  border-radius: 20px;       /* roundness of the scroll thumb */
+}
+.v-list-item{
+  cursor: pointer;
+}

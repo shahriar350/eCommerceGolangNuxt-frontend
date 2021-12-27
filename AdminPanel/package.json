@@ -1,0 +1,25 @@
+{
+  "name": "BongobitanAdminPanel",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@mdi/js": "^6.2.95",
+    "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/pwa": "^3.3.5",
+    "@nuxtjs/toast": "^3.3.1",
+    "cookie-universal-nuxt": "^2.1.5",
+    "core-js": "^3.15.1",
+    "nuxt": "^2.15.7",
+    "vee-validate": "^3.4.13",
+    "vuetify": "^2.5.5"
+  },
+  "devDependencies": {
+    "@nuxtjs/vuetify": "^1.12.1"
+  }
+}
