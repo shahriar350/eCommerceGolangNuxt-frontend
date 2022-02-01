@@ -4,7 +4,7 @@
     <div class="grid lg:grid-cols-7 md:grid-cols-5 sm:grid-cols-4 grid-cols-2 md:gap-4 gap-2 mb-5">
       <div v-for="(product,index) in products" :key="index" class="max-w-sm rounded overflow-hidden shadow-lg">
         <nuxt-link :to="`/product/${product.slug}/${product.id}`">
-          <v_image :name="product.product_image[0].image"/>
+          <v_image :name="product.edges.seller_product_images[0].image"/>
         </nuxt-link>
         <div class="px-6 py-4">
 <!--          <div class="font-bold text-xl mb-2">The Coldest Sunset</div>-->
@@ -68,7 +68,7 @@ export default {
 
 
   },
-  mounted() {
+  created() {
     this.getProductCategories()
   },
   methods: {

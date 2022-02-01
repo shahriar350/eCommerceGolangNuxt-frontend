@@ -16,6 +16,9 @@ const User = {
       return value.charAt(0).toUpperCase() + value.slice(1)
     })
     Vue.mixin({
+      methods: {
+
+      },
       computed: {
         screenWidth() {
           if (process.client) {

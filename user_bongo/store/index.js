@@ -2,15 +2,15 @@ export const state = () => ({
   is_user: false,
   user: null,
   apiHost: "http://127.0.0.1:8000",
-  breadcrumbs_name: null,
-  breadcrumbs: [],
+  cart_count: 0,
+  targetPage: '',
 })
 export const getters = {
-  get_breadcrumbs(state) {
-    return state.breadcrumbs
+  get_target_page(state){
+    return state.targetPage
   },
-  get_breadcrumbs_name(state) {
-    return state.breadcrumbs_name
+  get_cart_count(state) {
+    return state.cart_count
   },
   userCheck(state) {
     return state.is_user
@@ -20,12 +20,14 @@ export const getters = {
   }
 }
 export const mutations = {
-  set_breadcrumbs(state, data) {
-    state.breadcrumbs.splice(0, state.breadcrumbs.length)
-    state.breadcrumbs = data
+  set_target_page(state,data){
+    state.targetPage = data
   },
-  set_breadcrumbs_name(state, data) {
-    state.breadcrumbs_name = data
+  set_cart_count(state, data) {
+    state.cart_count += parseInt(data)
+  },
+  replace_cart_count(state, data) {
+    state.cart_count = parseInt(data)
   },
   user_set(state, data) {
     state.is_user = data[0]
@@ -37,7 +39,7 @@ export const mutations = {
 
 export const actions = {
   async nuxtServerInit({commit}) {
-    let data = await this.$axios.get('/api/auth/seller')
+    let data = await this.$axios.get('/api/auth/user')
     if (data.status === 200) {
       commit('user_set', [true, data.data])
     }
