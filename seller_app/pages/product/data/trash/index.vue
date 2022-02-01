@@ -12,81 +12,35 @@
         v-model="page"
         :length="products.total_pages" @input="next"
       ></v-pagination>
-      active products
+      <!--      active products-->
       <div class="mt-4">
-        <div class="d-flex flex-wrap flex-sm-row flex-column justify-space-between elevation-1 rounded pb-4 px-3">
+        <div class="elevation-1 rounded pb-4 px-3">
           <v-card-text class="headline text-md-h6 text-h6">Active products</v-card-text>
-          <v-card-text v-if="products.length > 0">No data available</v-card-text>
-          <v-card v-else v-for="(data,index) in products.items" :key="index" class="mr-3 my-md-0 my-2">
-            <v-card-title class="text-subtitle-2">
-              {{ data.name | capfirst }}
-            </v-card-title>
-            <v-card-subtitle class="text-body-2">
-              <p class="">Product price: <span class="font-weight-bold">{{ data.product_price }}/Taka</span></p>
-              <p class="">Selling price: <span class="font-weight-bold">{{ data.selling_price }}/Taka</span></p>
-              <p class="">Quantity: <span class="font-weight-bold">{{ data.quantity }}</span></p>
-            </v-card-subtitle>
-            <v-card-actions>
-              <nuxt-link class="px-2 " :to="{path: `/seller/product/edit/${data.slug}/basic`}">
-                <v-icon>{{ icon.mdiAccountEdit }}</v-icon>
-              </nuxt-link>
-              <v-icon @click="soft_delete_now(data.id,index)" class="px-2 cursor-pointer">{{ icon.mdiLock }}</v-icon>
-            </v-card-actions>
-          </v-card>
+          <v-card-text v-if="products.length <= 0">No data available</v-card-text>
+          <v-row dense v-else>
+            <v-col xl="2" lg="3" md="4" sm="6" cols="12" v-for="(data,index) in products" :key="index">
+              <v-card>
+                <v-card-title class="text-subtitle-2">
+                  <my_img :thumbnail="data.edges.seller_product_images[0].image" />
+                </v-card-title>
+                <v-card-subtitle class="text-body-2">
+                  <p class=""><span class="font-weight-bold text-subtitle-1">{{ data.name | capfirst }}</span></p>
+                  <p class="">Product price: <span class="font-weight-bold">{{ data.product_price }}/Taka</span></p>
+                  <p class="">Selling price: <span class="font-weight-bold">{{ data.selling_price }}/Taka</span></p>
+                  <p class="">Quantity: <span class="font-weight-bold">{{ data.quantity }}</span></p>
+                </v-card-subtitle>
+                <v-card-actions>
+
+                  <form @click="restoreItem(data.id,index)">
+                    <v-btn>Recover</v-btn>
+                  </form>
+                </v-card-actions>
+              </v-card>
+            </v-col>
+          </v-row>
+
 
         </div>
-      </div>
-      <!--          trash product start-->
-
-      <div class="mt-4">
-        <div class="d-flex flex-wrap flex-sm-row flex-column justify-space-between elevation-1 rounded pb-4 px-3">
-          <v-card-text class="headline text-md-h6 text-h6">Trash products</v-card-text>
-          <v-card-text v-if="trash_products.length < 1" class="text-md-h6">No data available</v-card-text>
-          <v-card v-else v-for="(data,index) in trash_products" :key="index" class="mr-3">
-            <v-card-title class="text-subtitle-2">
-              {{ data.name | capfirst }}
-            </v-card-title>
-            <v-card-subtitle class="text-body-2">
-              <p class="">Product price: <span class="font-weight-bold">{{ data.product_price }}/Taka</span></p>
-              <p class="">Selling price: <span class="font-weight-bold">{{ data.selling_price }}/Taka</span></p>
-              <p class="">Quantity: <span class="font-weight-bold">{{ data.quantity }}</span></p>
-            </v-card-subtitle>
-            <v-card-actions>
-              <nuxt-link class="px-2" :to="{path: `/seller/product/edit/${data.slug}/basic`}">
-                <v-icon>{{ icon.mdiAccountEdit }}</v-icon>
-              </nuxt-link>
-              <v-icon @click="restoreItem(data.id,index)" class="px-2 cursor-pointer">{{ icon.mdiLockOpenVariant }}
-              </v-icon>
-              <v-icon @click="deletenow(data.id,index)" class="px-2 cursor-pointer">{{ icon.mdiDelete }}</v-icon>
-            </v-card-actions>
-          </v-card>
-
-        </div>
-
-      </div>
-      inactivate product start
-      <div class="mt-4">
-        <div class="d-flex flex-wrap flex-sm-row flex-column justify-space-between elevation-1 rounded pb-4 px-3">
-          <v-card-text class="headline text-md-h6 text-h6">Inactive products</v-card-text>
-          <v-card-text v-if="inactive_products.length < 1" class="text-md-h6">No data available</v-card-text>
-          <v-card v-else v-for="(data,index) in inactive_products" :key="index" class="mr-3">
-            <v-card-title class="text-subtitle-2">
-              {{ data.name | capfirst }}
-            </v-card-title>
-            <v-card-subtitle class="text-body-2">
-              <p class="">Product price: <span class="font-weight-bold">{{ data.product_price }}/Taka</span></p>
-              <p class="">Selling price: <span class="font-weight-bold">{{ data.selling_price }}/Taka</span></p>
-              <p class="">Quantity: <span class="font-weight-bold">{{ data.quantity }}</span></p>
-            </v-card-subtitle>
-            <v-card-actions>
-              <nuxt-link class="px-2" :to="{path: `/seller/product/edit/${data.slug}/basic`}">
-                <v-icon>{{ icon.mdiAccountEdit }}</v-icon>
-              </nuxt-link>
-              <v-icon @click="soft_delete_now(data.id,index)" class="px-2 cursor-pointer">mdi-delete</v-icon>
-            </v-card-actions>
-          </v-card>
-        </div>
-
       </div>
     </div>
     <!--    inactivate product end-->
@@ -142,16 +96,16 @@
 import confirm from "@/components/confirm";
 import {mdiLockOpenVariant, mdiDelete, mdiChevronRight, mdiChevronLeft, mdiLock, mdiAccountEdit} from '@mdi/js'
 import Loading_page from "@/components/loading_page";
-
+import my_img from "@/components/my_img";
 export default {
   middleware({redirect, query}) {
     if (!query.page) {
-      redirect('/product?page=1&tab=')
+      redirect('/product/data/trash?page=0&tab=')
     }
   },
   components: {
     Loading_page,
-    confirm
+    confirm,my_img
   },
   data() {
     return {
@@ -179,27 +133,15 @@ export default {
       dialog: false,
       loading: false,
       shops: [],
-      inactive_products: [],
-      trash_products: [],
     }
   },
   mounted() {
-    if (this.inactive_products.length <= 0 || this.trash_products.length <= 0) {
-      this.$axios.get('/api/seller/product/min/non/active/all')
-        .then(res => {
-          this.inactive_products = res.data
-        })
-      this.$axios.get('/api/seller/product/min/deleted/all')
-        .then(res => {
-          this.trash_products = res.data
-        })
-    }
+
   },
   created() {
     this.set_breadcrumbs()
     console.log(this.$route.query.tab)
     if (this.$route.query.tab && this.$route.query.tab === 'openshop') {
-      console.log('hello')
       this.loading = true
       this.dialog = true
       this.$axios.get('/api/seller/shops/active/all')
@@ -213,7 +155,7 @@ export default {
   // watchQuery: ['page'],
   async fetch() {
     const page = this.$route.query.page
-    await this.$axios.get('/api/seller/product/min/all?page=' + page)
+    await this.$axios.get(`/api/seller/product/min/deleted/all?size=2&page=${parseInt(page) -1}`)
       .then(res => {
         // this.products = res.data
         this.products = res.data
@@ -228,7 +170,7 @@ export default {
       if (val.page) {
         this.$store.commit('set_breadcrumbs_name', {
           name: 'Create Product',
-          url: `/product?page=${val.page}&tab=openshop`
+          url: `/product?page=${val.page}&tab=openshop&size=2`
         })
       }
       if (val.tab && val.tab === 'openshop') {
@@ -265,8 +207,7 @@ export default {
       if (await this.$refs.confirm.open('Restore now', 'User can buy this product again.')) {
         const data = await this.$axios.patch(`/api/seller/product/recover/${id}/`)
         if (data.status === 200) {
-          this.products.push(this.trash_products[key])
-          this.trash_products.splice(key, 1)
+          this.products.splice(key, 1)
           this.$toast.success('Restored successfully')
         }
       }
@@ -294,15 +235,15 @@ export default {
           href: '/'
         },
         {
-          text: 'Product',
+          text: 'Trash',
           disabled: true,
-          href: '/product'
+          href: '/product/data/trash'
         }
       ]
       this.$store.commit('set_breadcrumbs', data)
       this.$store.commit('set_breadcrumbs_name', {
         name: 'Create Product',
-        url: `/product?page=${this.$route.query.page}&tab=openshop`
+        url: `/product/data/trash?page=${this.$route.query.page}&tab=openshop`
       })
     }
   }

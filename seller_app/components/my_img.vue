@@ -25,7 +25,7 @@
 <script>
 
 export default {
-  name: 'my-img',
+  name: 'my_img',
   props: {
     thumbnail: String,
   },

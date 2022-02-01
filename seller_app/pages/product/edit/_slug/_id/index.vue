@@ -1,6 +1,10 @@
 <template>
   <div class="mt-4">
-    <client-only>
+    <div v-if="$fetchState.pending">
+      <loading_page />
+    </div>
+<!--    <p v-else-if="$fetchState.error !== null">Something is wrong. Refresh page</p>-->
+    <div v-else>
       <h2 class="py-2">{{ product.name }}</h2>
       <v-card>
         <v-card-title>
@@ -8,23 +12,23 @@
         </v-card-title>
         <v-card-text>
           <v-row>
-            <v-col cols="6" md="2" sm="4" xm v-for="(image,index) in product.product_image" :key="index">
-              <div v-if="image.display" class="d-block">
-                <div style="position: relative">
-                  <my-img :thumbnail="image.image"/>
-                  <v-icon style="position: absolute;top: 0;text-shadow: black 0px 0px 10px; color: white">mdi-record
-                  </v-icon>
-                </div>
-                <!--                <v-btn block small @click="deleteImage(image.id,index,true)">Delete</v-btn>-->
-              </div>
-              <div v-else>
-                <span @dblclick="defaultImage(image.id,index)">
-                  <my-img :thumbnail="image.image"/>
-                </span>
+                        <v-col cols="6" md="2" sm="4" xm v-for="(image,index) in product.edges.seller_product_images" :key="index">
+                          <div v-if="image.display" class="d-block">
+                            <div style="position: relative">
+                              <my_img :thumbnail="image.image"/>
+                              <v-icon style="position: absolute;top: 0;text-shadow: black 0px 0px 10px; color: white">mdi-record
+                              </v-icon>
+                            </div>
+                            <!--                <v-btn block small @click="deleteImage(image.id,index,true)">Delete</v-btn>-->
+                          </div>
+                          <div v-else>
+                            <span @dblclick="defaultImage(image.id,index)">
+                              <my_img :thumbnail="image.image"/>
+                            </span>
 
-                <v-btn block small @click="deleteImage(image.id,index,false)">Delete</v-btn>
-              </div>
-            </v-col>
+                            <v-btn block small @click="deleteImage(image.id,index,false)">Delete</v-btn>
+                          </div>
+                        </v-col>
           </v-row>
         </v-card-text>
         <v-card-actions>
@@ -208,12 +212,17 @@
         <v-card-title>
           Product variation
         </v-card-title>
-        <v-card-text class="elevation-2 mb-4" v-for="(variance,index) in product.seller_product_variation" :key="index">
+        <v-card-text class="elevation-2 mb-4" v-for="(variance,index) in product.edges.seller_product_variations" :key="index">
           <div class="px-3">
             <div class="pt-2 pb-4 d-flex flex-row justify-space-between align-content-start">
               <div class="d-flex">
-                <ul v-for="(value,valueIndex) in variance.seller_product_variation_values" :key="valueIndex">
-                  <li><span class="font-weight-bold">{{ value.attribute.name | capfirst }}</span>
+                <ul>
+                  <li>
+                    <v-img width="70px" :src="`http://127.0.0.1:8000/static/images/${variance.image}`" />
+                  </li>
+                </ul>
+                <ul v-for="(value,valueIndex) in variance.edges.seller_product_variation_values" :key="valueIndex">
+                  <li><span class="font-weight-bold">{{ value.edges.attribute.name | capfirst }}</span>
                     <ul>
                       <li>{{ value.name | capfirst }}</li>
                       <li>Description: {{ value.description }}</li>
@@ -309,7 +318,7 @@
                   rules="price"
                 >
                   <v-text-field
-                    v-model="product.seller_product_variation[index]['product_price']"
+                    v-model="product.edges.seller_product_variations[index]['product_price']"
                     :error-messages="errors"
                     label="Product price"
                     required
@@ -323,7 +332,7 @@
                   rules="required|price"
                 >
                   <v-text-field
-                    v-model="product.seller_product_variation[index]['selling_price']"
+                    v-model="product.edges.seller_product_variations[index]['selling_price']"
                     :error-messages="errors"
                     label="Selling price"
                     required
@@ -337,7 +346,7 @@
                   rules="required"
                 >
                   <v-text-field
-                    v-model="product.seller_product_variation[index]['quantity']"
+                    v-model="product.edges.seller_product_variations[index]['quantity']"
                     :error-messages="errors"
                     label="Quantity"
                     required
@@ -351,12 +360,13 @@
                   rules="image|image_size:1024|mimes:image/jpeg"
                 >
                   <v-file-input :error-messages="errors"
-                                v-model="product.seller_product_variation[index]['image']"
+                                v-model="product.edges.seller_product_variations[index]['new_img']"
                                 label="Update image"
                                 outlined
                                 chips
                   ></v-file-input>
                 </validation-provider>
+<!--                <button class="v-btn" type="submit">Update now</button>-->
                 <v-btn block type="submit">Update now</v-btn>
               </form>
             </validation-observer>
@@ -449,7 +459,7 @@
                                   v-slot="{ invalid }">
                 <form @submit.prevent="add_new_variance" action="">
                   <v-card-text>
-                  <div v-for="(variance,name) in variances" :key="name">
+                    <div v-for="(variance,name) in variances" :key="name">
 
 
                       <div>
@@ -526,7 +536,7 @@
 
 
 
-                  </div>
+                    </div>
                   </v-card-text>
                   <v-btn block type="submit">Save</v-btn>
                 </form>
@@ -536,7 +546,7 @@
           </v-card>
         </v-card-text>
       </v-card>
-    </client-only>
+    </div>
 
     <ConfirmDlg ref="confirm"/>
   </div>
@@ -545,7 +555,8 @@
 <script>
 import {extend, ValidationObserver, ValidationProvider, setInteractionMode} from 'vee-validate'
 import {required, size, image, min_value, mimes} from 'vee-validate/dist/rules'
-
+import my_img from "@/components/my_img";
+import loading_page from "@/components/loading_page";
 setInteractionMode('eager')
 extend('imageLength', {
   message: 'Minimum 2 and maximum 6 images can be uploaded', // the error message
@@ -603,7 +614,7 @@ export default {
   components: {
     ConfirmDlg: () => import('../../../../../components/confirm'),
     ValidationProvider,
-    ValidationObserver,
+    ValidationObserver,my_img,loading_page
   },
   async fetch() {
     await this.$axios.get(`/api/seller/product/${this.$route.params.id}`)
@@ -617,9 +628,10 @@ export default {
           this.product_offer_date.push(new Date(this.product.offer_price_start).toISOString().slice(0, 10))
           this.product_offer_date.push(new Date(this.product.offer_price_end).toISOString().slice(0, 10))
         }
-        if (this.product.seller_product_variation.length > 0) {
-          this.product.seller_product_variation.forEach(e => {
-            e.image = null
+        if (this.product.edges.seller_product_variations.length > 0) {
+          this.product.edges.seller_product_variations.forEach(e => {
+            e["new_img"] = null
+            // e.image = null
           })
         }
       })
@@ -678,7 +690,7 @@ export default {
         .then(res => {
           this.$toast.success('Successfully saved.')
           res.data.forEach(e => {
-            this.product.seller_product_variation.push(e)
+            this.product.edges.seller_product_variations.push(e)
           })
           this.all_variations.splice(0, this.all_variations.length)
           this.variance_names.splice(0, this.variance_names.length)
@@ -746,7 +758,7 @@ export default {
       }
     },
     // variance end
-    updateVariance(index) {
+    async updateVariance(index) {
       let formdata = new FormData()
       // if (this.product.seller_product_variation[index]['color']) {
       //   formdata.append('color', this.product.seller_product_variation[index]['color'])
@@ -770,34 +782,58 @@ export default {
       // if (this.product.seller_product_variation[index]['description'] !== null) {
       //   formdata.append('description', this.product.seller_product_variation[index]['description'])
       // }
+      // const isValid = await this.$refs.variance_update.validate()
+      // const isValid = await this.$refs.variance_update.validate()
+      // if (isValid){
+        formdata.append('product_price', parseFloat(this.product.edges.seller_product_variations[index]['product_price']))
+        formdata.append('selling_price', parseFloat(this.product.edges.seller_product_variations[index]['selling_price']))
+        formdata.append('quantity', parseInt(this.product.edges.seller_product_variations[index]['quantity']))
+      console.log('asfasf')
+        if (this.product.edges.seller_product_variations[index].new_img !== null) {
+          formdata.append('image', this.product.edges.seller_product_variations[index].new_img)
+        }
+      console.log('asfasf')
 
-      formdata.append('product_price', parseFloat(this.product.seller_product_variation[index]['product_price']))
-      formdata.append('selling_price', parseFloat(this.product.seller_product_variation[index]['selling_price']))
-      formdata.append('quantity', parseInt(this.product.seller_product_variation[index]['quantity']))
-      if (this.product.seller_product_variation[index]['image'] !== null) {
-        formdata.append('image', this.product.seller_product_variation[index]['image'])
-      }
+        this.$axios.patch(`/api/seller/product/edit/variation/${this.$route.params.id}/${this.product.edges.seller_product_variations[index]['id']}`, formdata)
+          .then((res) => {
+            if (this.product.edges.seller_product_variations[index]['new_img'] !== null){
+              this.product.edges.seller_product_variations[index]['image'] = res.data
+              this.product.edges.seller_product_variations[index]['new_img'] = null
+              this.$toast.success("Sucessfully updated.")
+            }
 
+          }).catch(res => {
+          this.$toast.success(`${res.response.data}`)
+        })
+      // }
 
-      this.$axios.patch(`/api/seller/product/edit/variation/${this.$route.params.id}/${this.product.seller_product_variation[index]['id']}`, formdata)
-        .then(() => {
-          this.$toast.success("Sucessfully updated.")
-        }).catch(res => {
-        this.$toast.success(`${res.response.data}`)
-      })
     },
     defaultImage(image_id, index) {
+      console.log("display" in this.product.edges.seller_product_images[index])
+      console.log(index)
+      this.product.edges.seller_product_images.forEach((data) => {
+        console.log(data.display)
+        if(data.display === undefined){
+          data["display"] = false
+        }
+        // if (!("display" in this.product.edges.seller_product_images)){
+        //
+        // }
+      })
       this.$axios.patch(`/api/seller/product/edit/${this.product.id}/${image_id}/image/display`)
         .then(res => {
-          this.product.product_image.forEach((data) => {
+          this.product.edges.seller_product_images.forEach((data) => {
             if (data.display) {
               data.display = false
             }
           })
-          this.product.product_image[index].display = true
+
+          this.product.edges.seller_product_images[index].display = true
+          console.log(this.product.edges.seller_product_images[index])
         }).catch(() => {
         this.$toast.error("Try again.")
       })
+
     },
     async productBasicUpdate() {
       const isValid = await this.$refs.basic_observer.validate()

@@ -525,49 +525,51 @@ extend('image_size', {
 
 export default {
   // mixins: [validationMixin],
-  async asyncData({params, $axios, redirect}) {
-    let shop = [];
-    let brand = [];
-    let category = [];
-    let variation = [];
-    const shop_data = await $axios.get(`/api/seller/shop/${params.uid}`)
-    if (shop_data.status === 200) {
-      shop = shop_data.data
-      const brand_data = await $axios.get("/api/seller/brand/by/shop")
-      const category_data = await $axios.get("/api/seller/category/by/shop")
-      const variation_data = await $axios.get("/api/seller/variation")
 
-      if (brand_data.status === 200) {
-        shop = brand_data.data
-      }
-      if (category_data.status === 200) {
-        category = category_data.data
-      }
-      if (variation_data.status === 200) {
-        variation = variation_data.data
-      }
-      return {
-        shop: shop,
-        categories: category,
-        variation_types: variation,
-        brands: brand
-      }
-    } else {
-      return redirect('/seller/product/create')
-    }
-    // const data = await $axios.$get(`/api/seller/shop/${params.shop}/`)
-    // const data = await $axios.$get(`/api/seller/shop/check/${params.shop}/`)
-    // if (data.status === 200) {
-    //   return {
-    //     shop: data.shop,
-    //     categories: data.pro_cat,
-    //     variation_types: data.variations,
-    //     brands: data.brands
-    //   }
-    // } else {
-    //   return redirect('/seller/product/create')
-    // }
-  },
+  // async asyncData({params, $axios, redirect}) {
+  //   let shop = [];
+  //   let brand = [];
+  //   let category = [];
+  //   let variation = [];
+  //   const shop_data = await $axios.get(`/api/seller/shop/${params.uid}`)
+  //   if (shop_data.status === 200) {
+  //     shop = shop_data.data
+  //     const brand_data = await $axios.get("/api/seller/brand/by/shop")
+  //     const category_data = await $axios.get(`/api/seller/category/by/shop/${params.uid}`)
+  //     console.log(params.uid)
+  //     const variation_data = await $axios.get("/api/seller/variation")
+  //
+  //     if (brand_data.status === 200) {
+  //       shop = brand_data.data
+  //     }
+  //     if (category_data.status === 200) {
+  //       category = category_data.data
+  //     }
+  //     if (variation_data.status === 200) {
+  //       variation = variation_data.data
+  //     }
+  //     return {
+  //       shop: shop,
+  //       categories: category,
+  //       variation_types: variation,
+  //       brands: brand
+  //     }
+  //   } else {
+  //     return redirect('/seller/product/create')
+  //   }
+  //   // const data = await $axios.$get(`/api/seller/shop/${params.shop}/`)
+  //   // const data = await $axios.$get(`/api/seller/shop/check/${params.shop}/`)
+  //   // if (data.status === 200) {
+  //   //   return {
+  //   //     shop: data.shop,
+  //   //     categories: data.pro_cat,
+  //   //     variation_types: data.variations,
+  //   //     brands: data.brands
+  //   //   }
+  //   // } else {
+  //   //   return redirect('/seller/product/create')
+  //   // }
+  // },
   components: {
     ConfirmDlg: () => import('@/components/confirm'),
     ValidationProvider,
@@ -578,6 +580,11 @@ export default {
       icon: {
         mdiMinusCircle, mdiCalendar, mdiPlusCircle
       },
+      shop: {},
+      brands: [],
+      categories: [],
+      variation_types: [],
+      variation: [],
       modal: false,
       select_variation: null,
       product: {
@@ -598,6 +605,28 @@ export default {
       variance_names: []
     }
   },
+  fetch() {
+    // console.log(this.$route.query)
+    this.$axios.get(`/api/seller/shop/${this.$route.query.uid}`)
+      .then(res => {
+        this.$axios.get("/api/seller/brand/by/shop")
+          .then(resa => {
+            this.brands = resa.data
+          })
+        this.$axios.get(`/api/seller/category/by/shop/${this.$route.query.uid}`)
+          .then(resb => {
+            this.categories = resb.data
+          })
+        this.$axios.get(`/api/seller/variation`)
+          .then(resc => {
+            this.variation_types = resc.data
+          })
+      }) .catch(()=> {
+      return this.$router.replace("/product")
+    })
+
+  },
+  fetchOnServer: false,
   created() {
     this.set_breadcrumbs()
   },

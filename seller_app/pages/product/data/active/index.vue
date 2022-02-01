@@ -16,20 +16,21 @@
       <div class="mt-4">
         <div class="elevation-1 rounded pb-4 px-3">
           <v-card-text class="headline text-md-h6 text-h6">Active products</v-card-text>
-          <v-card-text v-if="products.length > 0">No data available</v-card-text>
+          <v-card-text v-if="products.length <= 0">No data available</v-card-text>
           <v-row dense v-else>
-            <v-col xl="2" lg="3" md="4" sm="6" cols="12" v-for="(data,index) in products.items" :key="index">
+            <v-col xl="2" lg="3" md="4" sm="6" cols="12" v-for="(data,index) in products" :key="index">
               <v-card>
                 <v-card-title class="text-subtitle-2">
-                  {{ data.name | capfirst }}
+                  <my_img :thumbnail="data.edges.seller_product_images[0].image" />
                 </v-card-title>
                 <v-card-subtitle class="text-body-2">
+                  <p class=""><span class="font-weight-bold text-subtitle-1">{{ data.name | capfirst }}</span></p>
                   <p class="">Product price: <span class="font-weight-bold">{{ data.product_price }}/Taka</span></p>
                   <p class="">Selling price: <span class="font-weight-bold">{{ data.selling_price }}/Taka</span></p>
                   <p class="">Quantity: <span class="font-weight-bold">{{ data.quantity }}</span></p>
                 </v-card-subtitle>
                 <v-card-actions>
-                  <nuxt-link class="px-2 " :to="{path: `/product/edit/${data.Slug}/${data.id}`}">
+                  <nuxt-link class="px-2 " :to="{path: `/product/edit/${data.slug}/${data.id}`}">
                     <v-icon>{{ icon.mdiAccountEdit }}</v-icon>
                   </nuxt-link>
                   <v-icon @click="soft_delete_now(data.id,index)" class="px-2 cursor-pointer">{{
@@ -98,7 +99,7 @@
 import confirm from "@/components/confirm";
 import {mdiLockOpenVariant, mdiDelete, mdiChevronRight, mdiChevronLeft, mdiLock, mdiAccountEdit} from '@mdi/js'
 import Loading_page from "@/components/loading_page";
-
+import my_img from "@/components/my_img";
 export default {
   middleware({redirect, query}) {
     if (!query.page) {
@@ -107,7 +108,7 @@ export default {
   },
   components: {
     Loading_page,
-    confirm
+    confirm,my_img
   },
   data() {
     return {

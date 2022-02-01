@@ -1,12 +1,7 @@
 <template>
   <div>
-    <div>
-      <div v-for="(error,index) of server_err" :key="index">
-        <div class="d-flex mb-2">
-          <p>{{ index }}: </p>
-          <p>{{ error }} </p>
-        </div>
-      </div>
+    <div v-if="server_err !== ''">
+      <v-alert type="error" class="mt-3">{{server_err}}</v-alert>
     </div>
     <ValidationObserver ref="shop_validate"
                         v-slot="{ invalid }">
@@ -162,7 +157,7 @@
       return {
         connection: null,
 
-        server_err: null,
+        server_err: "",
         loading: false,
         shop_categories: [],
         form: {
@@ -193,7 +188,10 @@
       this.get_shop_categories()
     },
     methods: {
-      async submitShopForm($v) {
+      async submitShopForm() {
+        if (this.server_err !== ''){
+          this.server_err = ''
+        }
         const isValid = await this.$refs.shop_validate.validate()
         if (isValid) {
           let formdata = new FormData()
@@ -208,14 +206,15 @@
               console.log(res.data)
               this.connection.send(JSON.stringify(res.data))
               //
-              // this.form = {
-              //   shop_category_id: null,
-              //   shop_name: '',
-              //   contact_number: '',
-              //   banner: null,
-              //   business_location: ''
-              // }
-              // this.$refs.shop_validate.reset()
+              this.form = {
+                shop_category_id: null,
+                shop_name: '',
+                contact_number: '',
+                banner: null,
+                business_location: ''
+              }
+              this.$refs.shop_validate.reset()
+              // this.$refs.shop_validate.validate()
               this.$toast.success('Successfully created you shop')
             }).catch(err => {
               this.$vuetify.goTo(0)

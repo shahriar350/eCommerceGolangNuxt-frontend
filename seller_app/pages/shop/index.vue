@@ -1,11 +1,11 @@
 <template>
   <div>
-    <p v-if="$fetchState.pending">Loading....</p>
+    <loading_page v-if="$fetchState.pending"></loading_page>
     <p v-else-if="$fetchState.error">Error while fetching mountains</p>
     <div v-else class="mt-4">
-      <div class="d-flex justify-end mb-2">
-        <v-btn to="/shop/create">Create shop</v-btn>
-      </div>
+<!--      <div class="d-flex justify-end mb-2">-->
+<!--        <v-btn to="/shop/create">Create shop</v-btn>-->
+<!--      </div>-->
       <!--    active shops start-->
       <v-card :loading="loadingactive" :disabled="loadingactive">
         <v-card-title>
@@ -43,6 +43,8 @@
                   <v-btn
                     text
                     color="blue lighten-2"
+                    :nuxt="true"
+                    :to="`/shop/products/${shop.id}`"
                   >
                     Products
                   </v-btn>
@@ -233,7 +235,7 @@
 import {extend, ValidationObserver, ValidationProvider, setInteractionMode} from 'vee-validate'
 import {required, image} from 'vee-validate/dist/rules'
 import {mdiClose} from '@mdi/js'
-
+import loading_page from "@/components/loading_page";
 setInteractionMode('eager')
 extend('required', {
   ...required,
@@ -245,10 +247,10 @@ extend('image', {
 })
 export default {
   components: {
-    ImgMine: () => import('@/components/my-img'),
+    ImgMine: () => import('@/components/my_img'),
     confirm: () => import('@/components/confirm'),
     ValidationProvider,
-    ValidationObserver,
+    ValidationObserver, loading_page
   },
   data() {
     return {
@@ -283,18 +285,34 @@ export default {
     this.set_breadcrumbs()
   },
   async fetch() {
-    const active_shop_data = await this.$axios.get('/api/seller/shops/active/all')
-    if (active_shop_data.status === 200){
-      this.active_shops = active_shop_data.data
-    }
-    const inactive_shop_data = await this.$axios.get('/api/seller/shops/inactive/all')
-    if (inactive_shop_data.status === 200){
-      this.non_active_shops = inactive_shop_data.data
-    }
-    const deleted_shop_data = await this.$axios.get('/api/seller/shops/delete/all')
-    if (deleted_shop_data.status === 200){
-      this.delete_shops = deleted_shop_data.data
-    }
+    await this.$axios.get("/api/seller/shops/all")
+    .then(res => {
+      console.log(res.data)
+      for (const shop of res.data) {
+        console.log(shop.active)
+        if ("active" in shop && shop.active){
+          this.active_shops = res.data
+        } else {
+          if ("deleted_at" in shop){
+            this.delete_shops = res.data
+          } else {
+            this.non_active_shops = res.data
+          }
+        }
+      }
+    })
+    // const active_shop_data = await this.$axios.get('/api/seller/shops/active/all')
+    // if (active_shop_data.status === 200) {
+    //   this.active_shops = active_shop_data.data
+    // }
+    // const inactive_shop_data = await this.$axios.get('/api/seller/shops/inactive/all')
+    // if (inactive_shop_data.status === 200) {
+    //   this.non_active_shops = inactive_shop_data.data
+    // }
+    // const deleted_shop_data = await this.$axios.get('/api/seller/shops/delete/all')
+    // if (deleted_shop_data.status === 200) {
+    //   this.delete_shops = deleted_shop_data.data
+    // }
 
   },
   // async asyncData({$axios}) {

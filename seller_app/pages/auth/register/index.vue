@@ -12,7 +12,9 @@
               <p>Seller Registration</p>
               <v-btn :nuxt="true" color="primary"  to="/auth/login">Login</v-btn>
             </v-card-title>
-
+            <v-card-subtitle v-if="response_error !== ''">
+              <v-alert type="error">{{response_error}}</v-alert>
+            </v-card-subtitle>
             <v-card-text>
 
               <div v-for="(data,index) of Object.keys(form)" :key="index" v-if="data !== 'contact_number'">
@@ -100,7 +102,7 @@ export default {
         tax_id: '',
       },
       // new end
-      response_error: null,
+      response_error: "",
 
     }
   },
@@ -112,6 +114,9 @@ export default {
   },
   methods: {
     async register_now() {
+      if (this.response_error !== ''){
+        this.response_error = ''
+      }
       const isValid = await this.$refs.seller_registration_validation.validate()
       if (isValid) {
         await this.$axios.post('/api/auth/seller/register/', this.form)
@@ -127,7 +132,7 @@ export default {
               tax_id: '',
             }
             this.$refs.seller_registration_validation.reset()
-          }).catch(err => {
+          }) .catch(err => {
             this.response_error = err.response.data
             this.$vuetify.goTo(0)
           })

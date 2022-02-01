@@ -108,9 +108,6 @@
       },
       ProductNameRequiredError() {
         const errors = []
-        if (!this.$v.product.name.$dirty) return errors
-        !this.$v.product.name.required && errors.push('This field is required!')
-        return errors
       },
     },
   }
